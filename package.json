@@ -1,0 +1,33 @@
+{
+  "name": "season-data-worker",
+  "version": "0.0.1",
+  "description": "Recieve scraped seasons from rabbit, if they are different from previously recieved then store and emit season changed event to rabbit",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "npx tsc",
+    "dev": "ts-node -r dotenv/config index.ts | npx bunyan",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vcalendars/season-data-worker.git"
+  },
+  "author": "Daniel Emery <danielremery@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vcalendars/season-data-worker/issues"
+  },
+  "homepage": "https://github.com/vcalendars/season-data-worker#readme",
+  "devDependencies": {
+    "@danielemeryau/logger": "0.0.5",
+    "@danielemeryau/prettier-config": "0.0.6",
+    "@danielemeryau/simple-rabbitmq": "0.0.8",
+    "@types/amqplib": "^0.5.13",
+    "@types/node": "^13.5.2",
+    "@vcalendars/models": "^0.2.0",
+    "bunyan": "^1.8.12",
+    "dotenv": "^8.2.0",
+    "ts-node": "^8.6.2",
+    "typescript": "^3.7.5"
+  }
+}
