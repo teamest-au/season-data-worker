@@ -31,6 +31,8 @@
     "typescript": "^3.7.5"
   },
   "dependencies": {
+    "knex": "^0.20.8",
+    "mysql2": "^2.1.0",
     "rxjs": "^6.5.4"
   }
 }
