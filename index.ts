@@ -1,15 +1,15 @@
 import Logger from '@danielemeryau/logger';
-import { Rabbit, observeRabbit } from '@danielemeryau/simple-rabbitmq';
-import { Season } from '@vcalendars/models';
+import { Rabbit } from '@danielemeryau/simple-rabbitmq';
+import { SerialisedSeason } from '@vcalendars/models';
 
 import run from './src/run';
 
 const logger = new Logger('season-data-worker');
 const rabbitLogger = new Logger('season-data-worker/simple-rabbitmq');
-let rabbit: Rabbit<Season>;
+let rabbit: Rabbit<SerialisedSeason>;
 
 async function initialise() {
-  rabbit = new Rabbit<Season>(
+  rabbit = new Rabbit<SerialisedSeason>(
     {
       host: process.env.RABBIT_MQ_HOST || 'localhost',
       port: process.env.RABBIT_MQ_PORT || '5672',

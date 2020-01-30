@@ -24,10 +24,13 @@
     "@danielemeryau/simple-rabbitmq": "0.0.8",
     "@types/amqplib": "^0.5.13",
     "@types/node": "^13.5.2",
-    "@vcalendars/models": "^0.2.0",
+    "@vcalendars/models": "^0.3.0",
     "bunyan": "^1.8.12",
     "dotenv": "^8.2.0",
     "ts-node": "^8.6.2",
     "typescript": "^3.7.5"
+  },
+  "dependencies": {
+    "rxjs": "^6.5.4"
   }
 }
