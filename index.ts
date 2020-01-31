@@ -8,11 +8,11 @@ import DataService from './src/dataService';
 
 const logger = new Logger('season-data-worker');
 const rabbitLogger = new Logger('season-data-worker/simple-rabbitmq');
-let rabbit: Rabbit<SerialisedSeason>;
+let rabbit: Rabbit;
 let dataService: DataService;
 
 async function initialise() {
-  rabbit = new Rabbit<SerialisedSeason>(
+  rabbit = new Rabbit(
     {
       host: process.env.RABBIT_MQ_HOST || 'localhost',
       port: process.env.RABBIT_MQ_PORT || '5672',

@@ -1,39 +1,35 @@
 import { map } from 'rxjs/operators';
 import Logger from '@danielemeryau/logger';
-import { Rabbit, observeRabbit } from '@danielemeryau/simple-rabbitmq';
+import {
+  Rabbit,
+  observeRabbit,
+  publishObservable,
+} from '@danielemeryau/simple-rabbitmq';
 import { SerialisedSeason } from '@vcalendars/models';
 
 import seasonToTeamSeasons from './seasonToTeamSeasons';
 import processTeamSeason from './processTeamSeason';
-import emitChangedTeamSeasons from './emitChangedTeamSeasons';
-import DataService from './dataService';
+import DataService, { TeamSeasonUpdate } from './dataService';
 import { deserialiseSeason } from './deserialise';
 
 export default async function run(
-  rabbit: Rabbit<SerialisedSeason>,
+  rabbit: Rabbit,
   data: DataService,
   logger: Logger,
 ) {
-  return new Promise((resolve, reject) => {
-    observeRabbit<SerialisedSeason>(
-      rabbit,
-      <string>process.env.RABBIT_MQ_READ_EXCHANGE,
+  const { observable } = await observeRabbit<SerialisedSeason>(
+    rabbit,
+    <string>process.env.RABBIT_MQ_READ_EXCHANGE,
+  );
+  await observable
+    .pipe(
+      map(deserialiseSeason),
+      seasonToTeamSeasons(logger),
+      processTeamSeason(logger, data),
+      publishObservable<TeamSeasonUpdate>(
+        rabbit,
+        <string>process.env.RABBIT_MQ_WRITE_EXCHANGE,
+      ),
     )
-      .pipe(
-        map(deserialiseSeason),
-        seasonToTeamSeasons(logger),
-        processTeamSeason(logger, data),
-        emitChangedTeamSeasons(logger),
-      )
-      .subscribe(
-        () => {},
-        err => {
-          logger.error(err);
-          reject(err);
-        },
-        () => {
-          resolve();
-        },
-      );
-  });
+    .toPromise();
 }
