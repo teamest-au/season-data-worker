@@ -27,3 +27,15 @@ Provide all configuration details via environment variables
 Migrate with `npx knex migrate:latest`
 
 Rollback last migration batch with `npx knex migrate:rollback`
+
+### Docker Run
+
+A manual run can be done with docker using the following command:
+
+`docker run --env-file=.env vcalendars/scraper-worker`
+
+### Local Runs
+
+A local run can be done with:
+
+`npm run dev`
