@@ -1,16 +1,19 @@
 import { flatMap } from 'rxjs/operators';
 
 import Logger from '@danielemeryau/logger';
-import { TeamSeason } from '@vcalendars/models';
+import { TeamSeasonUpdate } from './dataService';
 
-async function emitTeamSeason(teamSeason: TeamSeason, logger: Logger) {
-  logger.info(`Emitted ${JSON.stringify(teamSeason)}`);
+async function emitTeamSeason(
+  teamSeasonUpdate: TeamSeasonUpdate,
+  logger: Logger,
+) {
+  logger.info(`Emitted ${JSON.stringify(teamSeasonUpdate)}`);
   return Promise.resolve();
 }
 
 export default function emitChangedTeamSeasons(logger: Logger) {
-  return flatMap(async (teamSeason: TeamSeason) => {
-    await emitTeamSeason(teamSeason, logger);
-    return teamSeason;
+  return flatMap(async (teamSeasonUpdate: TeamSeasonUpdate) => {
+    await emitTeamSeason(teamSeasonUpdate, logger);
+    return teamSeasonUpdate;
   });
 }

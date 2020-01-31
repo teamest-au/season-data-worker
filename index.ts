@@ -1,14 +1,15 @@
-import knex from 'knex';
+import Knex from 'knex';
 import Logger from '@danielemeryau/logger';
 import { Rabbit } from '@danielemeryau/simple-rabbitmq';
 import { SerialisedSeason, TeamSeason } from '@vcalendars/models';
 
 import run from './src/run';
+import DataService from './src/dataService';
 
 const logger = new Logger('season-data-worker');
 const rabbitLogger = new Logger('season-data-worker/simple-rabbitmq');
 let rabbit: Rabbit<SerialisedSeason>;
-let db: knex;
+let dataService: DataService;
 
 async function initialise() {
   rabbit = new Rabbit<SerialisedSeason>(
@@ -22,7 +23,7 @@ async function initialise() {
   );
   await rabbit.connect();
 
-  db = knex({
+  const knex = Knex({
     client: 'mysql2',
     connection: {
       host: process.env.MYSQL_HOST || 'localhost',
@@ -31,22 +32,22 @@ async function initialise() {
       database: process.env.MYSQL_DATABASE || 'season_data',
     },
     migrations: {
-      tableName: 'migrations'
-    }
+      tableName: 'migrations',
+    },
   });
 
-  const test = await db.select('team_name', 'season_name').from<TeamSeason>('team_season');
+  dataService = new DataService(knex, logger);
 }
 
 async function tearDown() {
   await rabbit.disconnect();
-  await db.destroy();
+  await dataService.destroy();
 }
 
 logger.info('Season Data Worker Starting');
 initialise()
   .then(() => {
-    run(rabbit, logger)
+    run(rabbit, dataService, logger)
       .then(async () => {
         await tearDown();
         logger.info('Season Data Worker Exited');

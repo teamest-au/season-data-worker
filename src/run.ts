@@ -1,33 +1,17 @@
 import { map } from 'rxjs/operators';
 import Logger from '@danielemeryau/logger';
 import { Rabbit, observeRabbit } from '@danielemeryau/simple-rabbitmq';
-import {
-  Season,
-  SerialisedSeason,
-  Match,
-  SerialisedMatch,
-} from '@vcalendars/models';
+import { SerialisedSeason } from '@vcalendars/models';
 
 import seasonToTeamSeasons from './seasonToTeamSeasons';
 import processTeamSeason from './processTeamSeason';
 import emitChangedTeamSeasons from './emitChangedTeamSeasons';
-
-function deserialiseMatch(sm: SerialisedMatch): Match {
-  return {
-    ...sm,
-    time: new Date(sm.time),
-  };
-}
-
-function deserialiseSeason(ss: SerialisedSeason): Season {
-  return {
-    ...ss,
-    matches: ss.matches.map(deserialiseMatch),
-  };
-}
+import DataService from './dataService';
+import { deserialiseSeason } from './deserialise';
 
 export default async function run(
   rabbit: Rabbit<SerialisedSeason>,
+  data: DataService,
   logger: Logger,
 ) {
   return new Promise((resolve, reject) => {
@@ -38,7 +22,7 @@ export default async function run(
       .pipe(
         map(deserialiseSeason),
         seasonToTeamSeasons(logger),
-        processTeamSeason(logger),
+        processTeamSeason(logger, data),
         emitChangedTeamSeasons(logger),
       )
       .subscribe(

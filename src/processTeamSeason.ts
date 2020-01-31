@@ -4,17 +4,16 @@ import { Observable } from 'rxjs';
 import Logger from '@danielemeryau/logger';
 import { TeamSeason } from '@vcalendars/models';
 
-async function updateSeasonIfChanged(): Promise<boolean> {
-  return Promise.resolve(true);
-}
+import DataService, { TeamSeasonUpdate } from './dataService';
 
-export default function processTeamSeason(logger: Logger) {
+export default function processTeamSeason(logger: Logger, data: DataService) {
   return flatMap((teamSeason: TeamSeason) => {
-    return new Observable<TeamSeason>(observer => {
-      updateSeasonIfChanged()
-        .then(changed => {
-          if (changed) {
-            observer.next(teamSeason);
+    return new Observable<TeamSeasonUpdate>(observer => {
+      data
+        .updateTeamSeasonIfChanged(teamSeason)
+        .then(teamSeasonUpdate => {
+          if (teamSeasonUpdate) {
+            observer.next(teamSeasonUpdate);
           }
           observer.complete();
         })

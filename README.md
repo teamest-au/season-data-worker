@@ -9,7 +9,7 @@ Recieve scraped seasons from rabbit, if they are different from previously recie
 Provide all configuration details via environment variables
 
 | Name                     | Default Value        | Description                                |
-|--------------------------|----------------------|--------------------------------------------|
+| ------------------------ | -------------------- | ------------------------------------------ |
 | RABBIT_MQ_USER           | scraper              | Username to connect to rabbit              |
 | RABBIT_MQ_PASS           | scraper              | Password to connect to rabbit              |
 | RABBIT_MQ_HOST           | localhost            | Hostname of the rabbit instance            |
@@ -21,3 +21,9 @@ Provide all configuration details via environment variables
 | MYSQL_PASS               | dataworker           | Password to connect to mysql               |
 | MYSQL_DATABASE           | season_data          | The mysql database to use for data         |
 | LOG_LEVEL                | info                 | The minimum log level that will be printed |
+
+### Migrations
+
+Migrate with `npx knex migrate:latest`
+
+Rollback last migration batch with `npx knex migrate:rollback`

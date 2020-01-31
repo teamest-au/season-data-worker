@@ -20,7 +20,7 @@ export default function seasonToTeamSeasons(
   logger: Logger,
 ): OperatorFunction<Season, TeamSeason> {
   return flatMap((season: Season) => {
-    logger.info('Processing season', JSON.stringify(season));
+    logger.info('Processing season', { name: season.name });
     return new Observable<TeamSeason>(observer => {
       const teamNames = extractTeamNames(season);
       teamNames.forEach(teamName => {
