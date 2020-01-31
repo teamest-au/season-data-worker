@@ -42,7 +42,7 @@ jobs:
       - run:
           name: Setup Environment Variables
           command: |
-            REGISTRY=vcalendars/scraper-worker
+            REGISTRY=vcalendars/season-data-worker
             echo $REGISTRY
             echo "export REGISTRY=$REGISTRY" >> $BASH_ENV
             TAG=$CIRCLE_TAG
