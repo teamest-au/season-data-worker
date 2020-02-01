@@ -20,6 +20,8 @@ export default async function run(
   const { observable } = await observeRabbit<SerialisedSeason>(
     rabbit,
     <string>process.env.RABBIT_MQ_READ_EXCHANGE,
+    undefined,
+    <string>process.env.RABBIT_MQ_READ_QUEUE,
   );
   await observable
     .pipe(
