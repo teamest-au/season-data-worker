@@ -24,7 +24,7 @@
     "@danielemeryau/simple-rabbitmq": "0.0.10-publish-observable.3",
     "@types/amqplib": "^0.5.13",
     "@types/node": "^13.5.2",
-    "@vcalendars/models": "^0.3.0",
+    "@vcalendars/models": "0.3.1-namespaces.5",
     "bunyan": "^1.8.12",
     "dotenv": "^8.2.0",
     "ts-node": "^8.6.2",

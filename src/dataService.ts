@@ -1,9 +1,10 @@
 import Knex from 'knex';
-import { TeamSeason, Match, SerialisedMatch } from '@vcalendars/models';
 import Logger from '@danielemeryau/logger';
 import deepEqual from 'fast-deep-equal';
 
-import { deserialiseMatch } from './deserialise';
+import { SerialisedMatch } from '@vcalendars/models/raw';
+import { deserialiseMatch } from '@vcalendars/models/helpers';
+import { TeamSeason } from '@vcalendars/models/processed';
 
 interface DBTeamSeasonMatches {
   matches: SerialisedMatch[];

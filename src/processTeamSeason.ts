@@ -2,7 +2,7 @@ import { flatMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 import Logger from '@danielemeryau/logger';
-import { TeamSeason } from '@vcalendars/models';
+import { TeamSeason } from '@vcalendars/models/processed';
 
 import DataService, { TeamSeasonUpdate } from './dataService';
 

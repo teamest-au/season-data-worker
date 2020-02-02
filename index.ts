@@ -1,7 +1,6 @@
 import Knex from 'knex';
 import Logger from '@danielemeryau/logger';
 import { Rabbit } from '@danielemeryau/simple-rabbitmq';
-import { SerialisedSeason, TeamSeason } from '@vcalendars/models';
 
 import run from './src/run';
 import DataService from './src/dataService';

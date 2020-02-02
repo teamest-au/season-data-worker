@@ -1,8 +1,10 @@
 import { flatMap } from 'rxjs/operators';
-import { OperatorFunction, Observable } from 'rxjs';
-
-import { Season, TeamSeason } from '@vcalendars/models';
+import { Observable } from 'rxjs';
 import Logger from '@danielemeryau/logger';
+
+import { Season } from '@vcalendars/models/raw';
+import { ScrapedSeasonMessage } from '@vcalendars/models/messages';
+import { TeamSeason } from '@vcalendars/models/processed';
 
 function extractTeamNames(season: Season): string[] {
   let teamNames = new Set<string>();
@@ -16,10 +18,9 @@ function extractTeamNames(season: Season): string[] {
   return Array.from(teamNames);
 }
 
-export default function seasonToTeamSeasons(
-  logger: Logger,
-): OperatorFunction<Season, TeamSeason> {
-  return flatMap((season: Season) => {
+export default function seasonToTeamSeasons(logger: Logger) {
+  return flatMap((message: ScrapedSeasonMessage) => {
+    const { season, timeScraped, timezone, matchDuration } = message;
     logger.info('Processing season', { name: season.name });
     return new Observable<TeamSeason>(observer => {
       const teamNames = extractTeamNames(season);
@@ -27,6 +28,9 @@ export default function seasonToTeamSeasons(
         observer.next({
           seasonName: season.name,
           teamName,
+          timeScraped,
+          timezone,
+          matchDuration,
           matches: season.matches
             .filter(
               match =>
