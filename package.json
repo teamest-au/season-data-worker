@@ -21,7 +21,7 @@
   "devDependencies": {
     "@danielemeryau/logger": "0.0.5",
     "@danielemeryau/prettier-config": "0.0.6",
-    "@danielemeryau/simple-rabbitmq": "0.0.10-publish-observable.3",
+    "@danielemeryau/simple-rabbitmq": "0.1.1-envelope.1",
     "@types/amqplib": "^0.5.13",
     "@types/node": "^13.5.2",
     "@vcalendars/models": "0.3.1-namespaces.5",

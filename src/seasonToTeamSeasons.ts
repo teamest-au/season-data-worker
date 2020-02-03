@@ -18,30 +18,28 @@ function extractTeamNames(season: Season): string[] {
   return Array.from(teamNames);
 }
 
-export default function seasonToTeamSeasons(logger: Logger) {
-  return flatMap((message: ScrapedSeasonMessage) => {
-    const { season, timeScraped, timezone, matchDuration } = message;
-    logger.info('Processing season', { name: season.name });
-    return new Observable<TeamSeason>(observer => {
-      const teamNames = extractTeamNames(season);
-      teamNames.forEach(teamName => {
-        observer.next({
-          seasonName: season.name,
-          teamName,
-          timeScraped,
-          timezone,
-          matchDuration,
-          matches: season.matches
-            .filter(
-              match =>
-                match.away.name === teamName ||
-                match.home.name === teamName ||
-                match.duty?.name === teamName,
-            )
-            .sort((a, b) => a.time.getTime() - b.time.getTime()),
-        });
-      });
-      observer.complete();
-    });
-  });
+export default function seasonToTeamSeasons(
+  scrapedSeasonMessage: ScrapedSeasonMessage,
+  logger: Logger,
+): TeamSeason[] {
+  const { season, timeScraped, timezone, matchDuration } = scrapedSeasonMessage;
+  logger.info('Processing season', { name: season.name });
+
+  const teamNames = extractTeamNames(season);
+
+  return teamNames.map(teamName => ({
+    seasonName: season.name,
+    teamName,
+    timeScraped,
+    timezone,
+    matchDuration,
+    matches: season.matches
+      .filter(
+        match =>
+          match.away.name === teamName ||
+          match.home.name === teamName ||
+          match.duty?.name === teamName,
+      )
+      .sort((a, b) => a.time.getTime() - b.time.getTime()),
+  }));
 }
