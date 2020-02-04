@@ -24,6 +24,7 @@
     "@danielemeryau/simple-rabbitmq": "0.1.1-envelope.1",
     "@types/amqplib": "^0.5.13",
     "@types/node": "^13.5.2",
+    "@types/uuid": "^3.4.7",
     "@vcalendars/models": "0.3.1-namespaces.5",
     "bunyan": "^1.8.12",
     "dotenv": "^8.2.0",
@@ -34,6 +35,7 @@
     "fast-deep-equal": "^3.1.1",
     "knex": "^0.20.8",
     "mysql2": "^2.1.0",
-    "rxjs": "^6.5.4"
+    "rxjs": "^6.5.4",
+    "uuid": "^3.4.0"
   }
 }

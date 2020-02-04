@@ -1,6 +1,7 @@
 import Knex from 'knex';
 import Logger from '@danielemeryau/logger';
 import deepEqual from 'fast-deep-equal';
+import uuidv4 from 'uuid/v4';
 
 import { SerialisedMatch } from '@vcalendars/models/raw';
 import { deserialiseMatch } from '@vcalendars/models/helpers';
@@ -10,13 +11,13 @@ interface DBTeamSeasonMatches {
   matches: SerialisedMatch[];
 }
 interface DBTeamSeason {
-  id: number;
+  team_season_id: number;
 }
 
 export interface TeamSeasonUpdate {
   seasonName: string;
   teamName: string;
-  id: number;
+  team_season_id: number;
 }
 
 export default class DataService {
@@ -41,27 +42,27 @@ export default class DataService {
     const trx = await this.knex.transaction();
     try {
       const existing = await trx
-        .select<DBTeamSeason>('id')
+        .select<DBTeamSeason>('team_season_id')
         .from('team_season')
         .where({ season_name: receivedSeasonName, team_name: recievedTeamName })
         .first();
 
       if (existing) {
         this.logger.info(`Team season exists`, {
-          id: existing.id,
+          id: existing.team_season_id,
           teamName: recievedTeamName,
           seasonName: receivedSeasonName,
         });
         const latestMatches = await trx
           .select<DBTeamSeasonMatches>('matches')
-          .from('team_season_matches')
-          .where({ team_season_id: existing.id })
+          .from('team_season_match')
+          .where({ team_season_id: existing.team_season_id })
           .orderBy('created_at', 'desc')
           .first();
 
         if (!latestMatches) {
           throw new Error(
-            'team_season exists without any team_season_matches!',
+            'team_season exists without any team_season_match entries!',
           );
         }
 
@@ -83,12 +84,13 @@ export default class DataService {
             teamName: recievedTeamName,
             seasonName: receivedSeasonName,
           });
-          await trx('team_season_matches').insert({
-            team_season_id: existing.id,
+          await trx('team_season_match').insert({
+            team_season_match_id: uuidv4(),
+            team_season_id: existing.team_season_id,
             matches: JSON.stringify(receivedMatches),
           });
           result = {
-            id: existing.id,
+            team_season_id: existing.team_season_id,
             seasonName: receivedSeasonName,
             teamName: recievedTeamName,
           };
@@ -98,14 +100,14 @@ export default class DataService {
           "Team season doesn't exist, inserting with latest matches",
           { teamName: recievedTeamName, seasonName: receivedSeasonName },
         );
-        const teamSeasonId = await trx('team_season').insert(
-          {
-            season_name: receivedSeasonName,
-            team_name: recievedTeamName,
-          },
-          'id',
-        );
-        await trx('team_season_matches').insert({
+        const teamSeasonId = uuidv4();
+        await trx('team_season').insert({
+          team_season_id: teamSeasonId,
+          season_name: receivedSeasonName,
+          team_name: recievedTeamName,
+        });
+        await trx('team_season_match').insert({
+          team_season_match_id: uuidv4(),
           team_season_id: teamSeasonId,
           matches: JSON.stringify(receivedMatches),
         });
