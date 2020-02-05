@@ -17,9 +17,7 @@ import processTeamSeasonEnvelope, {
 } from './process-team-season-envelope';
 import DataService from './dataService';
 import createMessage from './createMessage';
-import seasonToTeamSeasonEnvelopes, {
-  ITeamSeasonEnvelope,
-} from './season-to-team-season-envelopes';
+import seasonToTeamSeasonEnvelopes from './season-to-team-season-envelopes';
 
 export default async function run(
   rabbit: Rabbit,
