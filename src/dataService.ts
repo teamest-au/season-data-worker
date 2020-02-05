@@ -21,6 +21,7 @@ interface DBTeamSeasonMatch {
   timezone: string;
   match_duration_minutes: number;
   matches: SerialisedMatch[];
+  scraped_at: string;
   created_at: string;
   updated_at: string;
 }
@@ -60,6 +61,7 @@ export default class DataService {
       matches: receivedMatches,
       matchDuration: recievedMatchDuration,
       timezone: recievedTimezone,
+      timeScraped: receivedTimeScraped,
     } = ts;
 
     const trx = await this.knex.transaction();
@@ -125,6 +127,7 @@ export default class DataService {
             matches: JSON.stringify(receivedMatches),
             match_duration_minutes: recievedMatchDuration,
             timezone: recievedTimezone,
+            scraped_at: receivedTimeScraped,
           });
           result = {
             team_season_id: existing.team_season_id,
@@ -154,6 +157,7 @@ export default class DataService {
           matches: JSON.stringify(receivedMatches),
           match_duration_minutes: recievedMatchDuration,
           timezone: recievedTimezone,
+          scraped_at: receivedTimeScraped,
         });
       }
 

@@ -15,6 +15,7 @@ export async function up(knex: Knex): Promise<any> {
     table.json('matches').notNullable();
     table.integer('match_duration_minutes').notNullable();
     table.string('timezone').notNullable();
+    table.dateTime('scraped_at').notNullable();
     table.timestamps(false, true);
   });
 }
