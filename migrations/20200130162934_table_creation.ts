@@ -13,6 +13,8 @@ export async function up(knex: Knex): Promise<any> {
     table.uuid('team_season_id').notNullable();
     table.foreign('team_season_id').references('team_season.team_season_id');
     table.json('matches').notNullable();
+    table.integer('match_duration_minutes').notNullable();
+    table.string('timezone').notNullable();
     table.timestamps(false, true);
   });
 }
