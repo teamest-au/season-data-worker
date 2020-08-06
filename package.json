@@ -30,7 +30,7 @@
   "dependencies": {
     "@danielemeryau/logger": "^0.1.1",
     "@danielemeryau/simple-rabbitmq": "^0.2.0",
-    "@teamest/internal-season-client": "0.0.5",
+    "@teamest/internal-season-client": "0.0.6",
     "@teamest/models": "^0.7.2",
     "bunyan": "^1.8.12",
     "google-protobuf": "^3.12.4",

@@ -8,12 +8,3 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: scraper
       RABBITMQ_DEFAULT_PASS: scraper
-  mysql:
-    image: mysql:latest
-    ports:
-      - 3306:3306
-    command: --default-authentication-plugin=mysql_native_password
-    environment:
-      MYSQL_ROOT_PASSWORD: local
-    volumes:
-      - ./migrations/bootstrap:/docker-entrypoint-initdb.d

@@ -21,7 +21,10 @@ async function initialise() {
   );
   await rabbit.connect();
 
-  seasonDataClient = new InternalSeasonClient(process.env.INTERNAL_SEASON_URI || 'localhost:50051');
+  const grpcHost = process.env.INTERNAL_SEASON_HOST || 'localhost';
+  const grpcPort = process.env.INTERNAL_SEASON_PORT || 50051;
+
+  seasonDataClient = new InternalSeasonClient(`${grpcHost}:${grpcPort}`);
 }
 
 async function tearDown() {
