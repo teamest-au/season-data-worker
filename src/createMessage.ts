@@ -1,6 +1,6 @@
 import { map } from 'rxjs/operators';
-import { ChangedSeasonMessage } from '@vcalendars/models/messages';
-import { TeamSeason } from '@vcalendars/models/processed';
+import { ChangedSeasonMessage } from '@teamest/models/messages';
+import { TeamSeason } from '@teamest/models/processed';
 
 const MESSAGE_VERSION = 'v1.0';
 

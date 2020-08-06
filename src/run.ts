@@ -5,23 +5,23 @@ import {
   observeRabbit,
   publishObservable,
 } from '@danielemeryau/simple-rabbitmq';
+import { InternalSeasonClient } from '@teamest/internal-season-client';
 
 import {
   SerialisedScrapedSeasonMessage,
   ChangedSeasonMessage,
-} from '@vcalendars/models/messages';
-import { deserialiseScrapedSeasonMessage } from '@vcalendars/models/helpers';
+} from '@teamest/models/messages';
+import { MessageSerialisers } from '@teamest/models/helpers';
 
 import processTeamSeasonEnvelope, {
   IProcessedTeamSeasonEnvelope,
 } from './process-team-season-envelope';
-import DataService from './dataService';
 import createMessage from './createMessage';
 import seasonToTeamSeasonEnvelopes from './season-to-team-season-envelopes';
 
 export default async function run(
   rabbit: Rabbit,
-  data: DataService,
+  data: InternalSeasonClient,
   logger: Logger,
 ) {
   const { observable } = await observeRabbit<SerialisedScrapedSeasonMessage>(
@@ -33,10 +33,12 @@ export default async function run(
   );
   await observable
     .pipe(
-      flatMap(envelope => {
+      flatMap((envelope) => {
         const deserialised = {
           ...envelope,
-          message: deserialiseScrapedSeasonMessage(envelope.message),
+          message: MessageSerialisers.deserialiseScrapedSeasonMessage(
+            envelope.message,
+          ),
         };
         const transformed = seasonToTeamSeasonEnvelopes(deserialised, logger);
         return transformed;
@@ -47,7 +49,7 @@ export default async function run(
         return envelope;
       }),
       filter((processed: IProcessedTeamSeasonEnvelope) => processed.changed),
-      map(teamSeasonEnvelope => teamSeasonEnvelope.teamSeason),
+      map((teamSeasonEnvelope) => teamSeasonEnvelope.teamSeason),
       createMessage(),
       publishObservable<ChangedSeasonMessage>(
         rabbit,

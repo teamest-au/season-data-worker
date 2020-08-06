@@ -1,14 +1,13 @@
-import Knex from 'knex';
 import Logger from '@danielemeryau/logger';
 import { Rabbit } from '@danielemeryau/simple-rabbitmq';
+import { InternalSeasonClient } from '@teamest/internal-season-client';
 
 import run from './src/run';
-import DataService from './src/dataService';
 
 const logger = new Logger('season-data-worker');
 const rabbitLogger = new Logger('season-data-worker/simple-rabbitmq');
 let rabbit: Rabbit;
-let dataService: DataService;
+let seasonDataClient: InternalSeasonClient;
 
 async function initialise() {
   rabbit = new Rabbit(
@@ -22,31 +21,17 @@ async function initialise() {
   );
   await rabbit.connect();
 
-  const knex = Knex({
-    client: 'mysql2',
-    connection: {
-      host: process.env.MYSQL_HOST || 'localhost',
-      user: process.env.MYSQL_USER || 'dataworker',
-      password: process.env.MYSQL_PASS || 'dataworker',
-      database: process.env.MYSQL_DATABASE || 'season_data',
-    },
-    migrations: {
-      tableName: 'migrations',
-    },
-  });
-
-  dataService = new DataService(knex, logger);
+  seasonDataClient = new InternalSeasonClient(process.env.INTERNAL_SEASON_URI || 'localhost:50051');
 }
 
 async function tearDown() {
   await rabbit.disconnect();
-  await dataService.destroy();
 }
 
 logger.info('Season Data Worker Starting');
 initialise()
   .then(() => {
-    run(rabbit, dataService, logger)
+    run(rabbit, seasonDataClient, logger)
       .then(async () => {
         await tearDown();
         logger.info('Season Data Worker Exited');

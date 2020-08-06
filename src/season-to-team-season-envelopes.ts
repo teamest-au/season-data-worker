@@ -1,8 +1,8 @@
 import seasonToTeamSeasons from './seasonToTeamSeasons';
 import Logger from '@danielemeryau/logger';
 import { IEnvelope } from '@danielemeryau/simple-rabbitmq';
-import { ScrapedSeasonMessage } from '@vcalendars/models/messages';
-import { TeamSeason } from '@vcalendars/models/processed';
+import { ScrapedSeasonMessage } from '@teamest/models/messages';
+import { TeamSeason } from '@teamest/models/processed';
 
 export interface ITeamSeasonEnvelope {
   teamSeason: TeamSeason;
