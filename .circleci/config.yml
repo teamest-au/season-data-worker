@@ -78,7 +78,7 @@ workflows:
               only: /v([0-9])*.([0-9])*.([0-9])*-.*/
             branches:
               ignore: /.*/
-        context: teamest-dockerhub
+          context: teamest-dockerhub
 
       - publish-latest:
           requires:
