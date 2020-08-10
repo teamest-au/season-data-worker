@@ -45,17 +45,19 @@ export default function seasonToTeamSeasons(
   scrapedSeasonMessage: ScrapedSeasonMessage,
   logger: Logger,
 ): TeamSeason[] {
-  const { season, timeScraped, timezone, matchDuration } = scrapedSeasonMessage;
-  logger.info('Processing season', { name: season.name });
+  const { season, timeScraped } = scrapedSeasonMessage;
+  logger.info('Processing season', {
+    competitionName: season.competitionName,
+    seasonName: season.seasonName,
+  });
 
   const teamNames = extractTeamNames(season);
 
   return teamNames.map((teamName) => ({
-    seasonName: season.name,
+    competitionName: season.competitionName,
+    seasonName: season.seasonName,
     teamName,
-    timeScraped,
-    timezone,
-    matchDuration,
+    lastScraped: timeScraped,
     events: season.events
       .filter((event) => isEventRelatedToTeam(event, teamName))
       .sort((a, b) => a.time.getTime() - b.time.getTime()),

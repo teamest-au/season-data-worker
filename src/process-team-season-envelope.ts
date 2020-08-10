@@ -16,7 +16,9 @@ export default function processTeamSeasonEnvelope(
 ) {
   return flatMap(async (teamSeasonEnvelope: ITeamSeasonEnvelope) => {
     const { teamSeason } = teamSeasonEnvelope;
-    const result = await data.updateTeamSeason(teamSeason);
+    const result = await data.updateTeamSeason({
+      teamSeason,
+    });
     return <IProcessedTeamSeasonEnvelope>{
       ...teamSeasonEnvelope,
       changed: result !== undefined,

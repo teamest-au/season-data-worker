@@ -17,8 +17,10 @@ export default function seasonEnvelopeToTeamSeasonEnvelopes(
   const teamSeasons = seasonToTeamSeasons(envelope.message, logger);
   const acknowledge = () => {
     count += 1;
+    const { message } = envelope;
+    const { season } = message;
     logger.debug(
-      `Count for ${envelope.message.season.name} at ${count}/${teamSeasons.length}`,
+      `Count for ${season.competitionName} ${season.seasonName} at ${count}/${teamSeasons.length}`,
     );
     if (count >= teamSeasons.length) {
       if (envelope.acknowledge) {
@@ -26,7 +28,7 @@ export default function seasonEnvelopeToTeamSeasonEnvelopes(
       }
     }
   };
-  return teamSeasons.map(teamSeason => ({
+  return teamSeasons.map((teamSeason) => ({
     teamSeason,
     acknowledge,
   }));
