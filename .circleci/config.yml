@@ -19,7 +19,7 @@ jobs:
       - run:
           name: Setup Environment Variables
           command: |
-            REGISTRY=vcalendars/season-data-worker
+            REGISTRY=teamest/season-data-worker
             echo $REGISTRY
             echo "export REGISTRY=$REGISTRY" >> $BASH_ENV
             TAG=$CIRCLE_TAG
@@ -43,7 +43,7 @@ jobs:
       - run:
           name: Setup Environment Variables
           command: |
-            REGISTRY=vcalendars/season-data-worker
+            REGISTRY=teamest/season-data-worker
             echo $REGISTRY
             echo "export REGISTRY=$REGISTRY" >> $BASH_ENV
             TAG=$CIRCLE_TAG
@@ -78,6 +78,7 @@ workflows:
               only: /v([0-9])*.([0-9])*.([0-9])*-.*/
             branches:
               ignore: /.*/
+        context: teamest-dockerhub
 
       - publish-latest:
           requires:
@@ -87,3 +88,4 @@ workflows:
               only: /v([0-9])*.([0-9])*.([0-9])*/
             branches:
               ignore: /.*/
+          context: teamest-dockerhub
