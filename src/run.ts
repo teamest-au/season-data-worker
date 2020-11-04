@@ -5,8 +5,8 @@ import {
   observeRabbit,
   publishObservable,
 } from '@danielemeryau/simple-rabbitmq';
-import { InternalSeasonClient } from '@teamest/internal-season-client';
 
+import { InternalSeasonServiceClient } from '@teamest/internal-season-client';
 import {
   SerialisedScrapedSeasonMessage,
   ChangedSeasonMessage,
@@ -21,7 +21,7 @@ import seasonToTeamSeasonEnvelopes from './season-to-team-season-envelopes';
 
 export default async function run(
   rabbit: Rabbit,
-  data: InternalSeasonClient,
+  data: InternalSeasonServiceClient,
   logger: Logger,
 ) {
   const { observable } = await observeRabbit<SerialisedScrapedSeasonMessage>(

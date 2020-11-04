@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 
 import Logger from '@danielemeryau/logger';
-import { InternalSeasonClient } from '@teamest/internal-season-client';
+import { InternalSeasonServiceClient } from '@teamest/internal-season-client';
 
 import { ITeamSeasonEnvelope } from './season-to-team-season-envelopes';
 
@@ -12,11 +12,11 @@ export interface IProcessedTeamSeasonEnvelope extends ITeamSeasonEnvelope {
 
 export default function processTeamSeasonEnvelope(
   logger: Logger,
-  data: InternalSeasonClient,
+  data: InternalSeasonServiceClient,
 ) {
   return flatMap(async (teamSeasonEnvelope: ITeamSeasonEnvelope) => {
     const { teamSeason } = teamSeasonEnvelope;
-    const result = await data.updateTeamSeason({
+    const result = await data.UpdateTeamSeason({
       teamSeason,
     });
     return <IProcessedTeamSeasonEnvelope>{

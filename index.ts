@@ -1,13 +1,17 @@
 import Logger from '@danielemeryau/logger';
 import { Rabbit } from '@danielemeryau/simple-rabbitmq';
-import { InternalSeasonClient } from '@teamest/internal-season-client';
+
+import { InternalSeasonServiceClient } from '@teamest/internal-season-client';
 
 import run from './src/run';
+
+const FIVE_MINUTES_MILLIS = 5 * 60 * 1000;
+const TEN_SECONDS_MILLIS = 10 * 1000;
 
 const logger = new Logger('season-data-worker');
 const rabbitLogger = new Logger('season-data-worker/simple-rabbitmq');
 let rabbit: Rabbit;
-let seasonDataClient: InternalSeasonClient;
+let seasonDataClient: InternalSeasonServiceClient;
 
 async function initialise() {
   rabbit = new Rabbit(
@@ -19,12 +23,19 @@ async function initialise() {
     },
     rabbitLogger,
   );
-  await rabbit.connect();
+  await rabbit.connect({
+    retry: true,
+    retryWait: TEN_SECONDS_MILLIS,
+    timeoutMillis: FIVE_MINUTES_MILLIS,
+  });
 
-  const grpcHost = process.env.INTERNAL_SEASON_HOST || 'localhost';
-  const grpcPort = process.env.INTERNAL_SEASON_PORT || 50051;
+  const internalSeasonUrl =
+    process.env.INTERNAL_SEASON_URL || 'http://localhost:9010';
 
-  seasonDataClient = new InternalSeasonClient(`${grpcHost}:${grpcPort}`);
+  seasonDataClient = new InternalSeasonServiceClient(
+    internalSeasonUrl,
+    'season-data-worker/internal-season-client',
+  );
 }
 
 async function tearDown() {
