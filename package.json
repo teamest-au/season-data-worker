@@ -1,6 +1,6 @@
 {
   "name": "season-data-worker",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Recieve scraped seasons from rabbit, if they are different from previously recieved then store and emit season changed event to rabbit",
   "main": "dist/index.js",
   "scripts": {
